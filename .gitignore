@@ -1,0 +1,4 @@
+node_modules/
+TCM.xlsx
+*.env
+.DS_Store

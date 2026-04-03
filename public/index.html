@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Regression Manager</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
+  <link href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css" rel="stylesheet"/>
+  <link href="css/style.css" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════════════════════════
+     SECTION 1 — LANDING (team cards)
+════════════════════════════════════════════════════════════════════════════ -->
+<div id="landingSection">
+
+  <div class="landing-header">
+    <div class="container-xl py-4 d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center gap-3">
+        <div class="brand-icon"><i class="bi bi-bug-fill"></i></div>
+        <div>
+          <h4 class="mb-0 fw-bold text-white">Regression Manager</h4>
+          <small class="text-white-50">
+            <i class="bi bi-file-earmark-excel-fill text-success me-1"></i>TCM.xlsx
+          </small>
+        </div>
+      </div>
+      <button class="btn btn-sm btn-outline-light" id="refreshTeamsBtn">
+        <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+      </button>
+    </div>
+  </div>
+
+  <div class="container-xl py-4">
+
+    <!-- Summary bar -->
+    <div class="row g-3 mb-4" id="globalStats">
+      <div class="col-6 col-md-3">
+        <div class="global-stat-card">
+          <div class="gs-num" id="gTotal">—</div>
+          <div class="gs-label">Total Test Cases</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="global-stat-card">
+          <div class="gs-num text-success" id="gScheduled">—</div>
+          <div class="gs-label">Scheduled</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="global-stat-card">
+          <div class="gs-num text-warning" id="gPending">—</div>
+          <div class="gs-label">Pending</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="global-stat-card">
+          <div class="gs-num text-primary" id="gTeams">—</div>
+          <div class="gs-label">Teams</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Team cards -->
+    <div id="teamsGrid" class="row g-3">
+      <div class="col-12 text-center py-5">
+        <div class="spinner-border text-primary"></div>
+        <p class="mt-2 text-muted">Reading TCM.xlsx...</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════════
+     SECTION 2 — TEAM TICKETS VIEW
+════════════════════════════════════════════════════════════════════════════ -->
+<div id="teamSection" class="d-none">
+
+  <div class="landing-header">
+    <div class="container-xl py-3 d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center gap-3">
+        <button class="btn btn-sm btn-outline-light" id="backBtn">
+          <i class="bi bi-arrow-left me-1"></i>All Teams
+        </button>
+        <div>
+          <h5 class="mb-0 fw-bold text-white" id="teamTitle">—</h5>
+          <small class="text-white-50" id="teamRelease">—</small>
+        </div>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <span class="text-white-50 small" id="selectedCount">0 selected</span>
+        <button class="btn btn-success btn-sm fw-semibold" id="scheduleSelectedBtn" disabled>
+          <i class="bi bi-calendar2-check me-1"></i>Schedule Selected
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-xl py-4">
+
+    <!-- Team stats -->
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-md-3">
+        <div class="global-stat-card">
+          <div class="gs-num" id="tTotal">—</div>
+          <div class="gs-label">Total Test Cases</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="global-stat-card">
+          <div class="gs-num text-success" id="tScheduled">—</div>
+          <div class="gs-label">Scheduled (Y)</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="global-stat-card">
+          <div class="gs-num text-warning" id="tPending">—</div>
+          <div class="gs-label">Pending (N)</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="global-stat-card">
+          <div class="gs-num text-info small-text" id="tRelease">—</div>
+          <div class="gs-label">Last Release</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter + select/deselect all -->
+    <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+      <div class="d-flex gap-2">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="N">
+          <i class="bi bi-clock me-1"></i>Pending
+        </button>
+        <button class="filter-btn" data-filter="Y">
+          <i class="bi bi-check-circle me-1"></i>Scheduled
+        </button>
+      </div>
+      <div class="d-flex gap-2">
+        <button class="btn btn-sm btn-outline-primary" id="selectAllBtn">
+          <i class="bi bi-check2-all me-1"></i>Select All
+        </button>
+        <button class="btn btn-sm btn-outline-secondary" id="deselectAllBtn">
+          <i class="bi bi-x-lg me-1"></i>Deselect All
+        </button>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="card shadow-sm">
+      <div class="card-body p-0">
+        <div id="teamTableWrapper">
+          <table id="ticketsTable" class="table table-hover mb-0 w-100">
+            <thead class="table-light">
+              <tr>
+                <th style="width:36px"></th>
+                <th>Key</th>
+                <th>Summary</th>
+                <th>Priority</th>
+                <th>Component</th>
+                <th>Epic Link</th>
+                <th>Test Case Assignee</th>
+                <th>Estimate</th>
+                <th>Schedule?</th>
+                <th>Execution Priority</th>
+                <th>Execution By</th>
+                <th>Test Result Ticket</th>
+                <th>Comments</th>
+              </tr>
+            </thead>
+            <tbody id="ticketsBody"></tbody>
+          </table>
+        </div>
+        <div id="teamLoader" class="text-center py-5 d-none">
+          <div class="spinner-border text-primary"></div>
+          <p class="mt-2 text-muted small">Loading team data...</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Floating Schedule button (appears when rows selected) ─────────────── -->
+<div id="floatScheduleBtn" class="float-sched-btn d-none">
+  <button class="btn btn-success fw-semibold shadow-lg" id="floatScheduleTrigger">
+    <i class="bi bi-calendar2-check me-2"></i>
+    Schedule Selected
+    <span class="badge bg-white text-success ms-2" id="floatCount">0</span>
+  </button>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════════
+     SCHEDULE MODAL (matches 2.png)
+════════════════════════════════════════════════════════════════════════════ -->
+<div class="modal fade" id="scheduleModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" style="max-width:400px">
+    <div class="modal-content sched-modal-card">
+
+      <button type="button" class="btn-close sched-close" data-bs-dismiss="modal"></button>
+
+      <div class="modal-body p-4">
+
+        <!-- ── Success state (replaces form) ── -->
+        <div id="schedSuccessState" class="d-none text-center py-3">
+          <div class="success-icon mb-3">
+            <i class="bi bi-check-circle-fill text-success"></i>
+          </div>
+          <h6 class="fw-bold mb-1">Tickets Scheduled!</h6>
+          <div class="text-muted small mb-3" id="schedSuccessMsg"></div>
+          <div id="schedCreatedKeys" class="created-tickets-list mb-4 text-start"></div>
+          <div class="d-flex gap-2 justify-content-center">
+            <button type="button" class="btn btn-outline-primary btn-sm fw-semibold" id="copyUrlsBtn">
+              <i class="bi bi-clipboard me-1"></i>Copy URLs
+            </button>
+            <button type="button" class="btn btn-success btn-sm fw-semibold" id="downloadScheduledBtn">
+              <i class="bi bi-download me-1"></i>Download CSV
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+
+        <!-- ── Error banner ── -->
+        <div id="schedError" class="alert alert-danger d-none mb-3 py-2 small"></div>
+
+        <!-- ── Form state ── -->
+        <div id="schedFormState">
+          <div class="mb-4">
+            <div class="fw-bold mb-1">Schedule Test Cases for Execution</div>
+            <div class="text-muted small" id="schedTicketCount">— tickets selected</div>
+          </div>
+
+          <form id="scheduleForm" autocomplete="off">
+
+          <!-- Email -->
+          <div class="sched-field mb-3">
+            <label class="sched-label">Email</label>
+            <div class="input-group sched-input-group">
+              <span class="input-group-text sched-icon"><i class="bi bi-person"></i></span>
+              <input type="email" id="schedEmail" class="form-control sched-input"
+                placeholder="you@company.com" required/>
+            </div>
+          </div>
+
+          <!-- API Token -->
+          <div class="sched-field mb-3">
+            <label class="sched-label">API Token</label>
+            <div class="input-group sched-input-group">
+              <span class="input-group-text sched-icon"><i class="bi bi-key"></i></span>
+              <input type="password" id="schedApiToken" class="form-control sched-input"
+                placeholder="Atlassian API token" required/>
+              <button type="button" class="btn sched-eye-btn" id="toggleSchedToken">
+                <i class="bi bi-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Due Date -->
+          <div class="sched-field mb-3">
+            <label class="sched-label">Due Date</label>
+            <div class="input-group sched-input-group">
+              <span class="input-group-text sched-icon"><i class="bi bi-calendar3"></i></span>
+              <input type="date" id="schedDueDate" class="form-control sched-input"/>
+            </div>
+          </div>
+
+          <!-- Release -->
+          <div class="sched-field mb-3">
+            <label class="sched-label">Release</label>
+            <div class="input-group sched-input-group">
+              <span class="input-group-text sched-icon"><i class="bi bi-tag"></i></span>
+              <input type="text" id="schedRelease" class="form-control sched-input"
+                placeholder="e.g. 2026_Week_14"/>
+            </div>
+          </div>
+
+          <!-- JIRA Base URL — pre-filled from localStorage, shown if missing -->
+          <div class="sched-field mb-3" id="baseUrlField">
+            <label class="sched-label">JIRA Base URL</label>
+            <div class="input-group sched-input-group">
+              <span class="input-group-text sched-icon"><i class="bi bi-globe2"></i></span>
+              <input type="url" id="schedBaseUrl" class="form-control sched-input"
+                placeholder="https://company.atlassian.net"/>
+            </div>
+            <div class="form-text small ps-1 text-muted">Saved automatically for next time</div>
+          </div>
+
+          <button type="button" class="btn btn-primary w-100 sched-submit-btn" id="scheduleSubmitBtn">
+            <span id="schedSpinner" class="spinner-border spinner-border-sm d-none me-2"></span>
+            SCHEDULE <i class="bi bi-arrow-right ms-1"></i>
+          </button>
+        </form>
+        </div><!-- end schedFormState -->
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

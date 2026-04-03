@@ -1,0 +1,259 @@
+/* ── Variables ─────────────────────────────────────────────────────────────── */
+:root {
+  --primary: #6366f1;
+  --header-bg: #0f172a;
+  --body-bg: #f1f5f9;
+}
+
+* { box-sizing: border-box; }
+body { font-family: system-ui, -apple-system, sans-serif; background: var(--body-bg); }
+
+/* ── Header bar ────────────────────────────────────────────────────────────── */
+.landing-header {
+  background: var(--header-bg);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.brand-icon {
+  width: 40px; height: 40px;
+  background: linear-gradient(135deg, var(--primary), #8b5cf6);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem; color: white;
+}
+
+/* ── Global stats ──────────────────────────────────────────────────────────── */
+.global-stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.gs-num   { font-size: 1.75rem; font-weight: 700; line-height: 1.2; }
+.gs-label { font-size: 0.72rem; color: #64748b; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.04em; }
+.small-text { font-size: 1rem !important; }
+
+/* ── Team cards ────────────────────────────────────────────────────────────── */
+.team-card {
+  background: white;
+  border-radius: 14px;
+  padding: 1.25rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  height: 100%;
+}
+.team-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+.team-icon {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--primary); font-size: 1rem;
+}
+.team-progress { background: #f1f5f9; border-radius: 99px; }
+
+/* ── Table ─────────────────────────────────────────────────────────────────── */
+#ticketsTable thead th {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #475569;
+  background: #f8fafc;
+  border-bottom: 2px solid #e2e8f0;
+  white-space: nowrap;
+  padding: 0.75rem 1.5rem 0.75rem 0.9rem;
+}
+#ticketsTable thead th.sorting,
+#ticketsTable thead th.sorting_asc,
+#ticketsTable thead th.sorting_desc {
+  padding-right: 1.5rem;
+}
+#ticketsTable thead th.sorting::before,
+#ticketsTable thead th.sorting::after,
+#ticketsTable thead th.sorting_asc::after,
+#ticketsTable thead th.sorting_desc::after {
+  right: 0.4rem;
+}
+#ticketsTable tbody td {
+  font-size: 0.83rem;
+  vertical-align: middle;
+  padding: 0.65rem 0.9rem;
+  border-color: #f1f5f9;
+}
+#ticketsTable tbody tr:hover td { background: #f8fafc; }
+#ticketsTable tbody tr.row-scheduled td { background-color: #bbf7d0 !important; }
+#ticketsTable tbody tr.row-scheduled:hover td { background-color: #86efac !important; }
+
+/* ── Key link ──────────────────────────────────────────────────────────────── */
+.key-link {
+  font-family: monospace; font-weight: 700; font-size: 0.8rem;
+  color: var(--primary); text-decoration: none;
+}
+.key-link:hover { text-decoration: underline; }
+
+/* ── Priority badges ───────────────────────────────────────────────────────── */
+.badge-priority {
+  display: inline-flex; align-items: center; gap: 3px;
+  padding: 2px 8px; border-radius: 999px; font-size: 0.68rem; font-weight: 600;
+}
+.p-highest { background:#fee2e2; color:#dc2626; }
+.p-high    { background:#ffedd5; color:#ea580c; }
+.p-medium  { background:#fef9c3; color:#ca8a04; }
+.p-low     { background:#dcfce7; color:#16a34a; }
+.p-lowest  { background:#f0fdf4; color:#15803d; }
+
+/* ── Schedule badges ───────────────────────────────────────────────────────── */
+.sched-badge {
+  display: inline-flex; align-items: center;
+  font-size: 0.7rem; font-weight: 600;
+  padding: 2px 8px; border-radius: 999px;
+}
+.sched-done    { background:#dcfce7; color:#16a34a; }
+.sched-pending { background:#fef9c3; color:#b45309; }
+
+/* ── Editable cells (estimate + assignee) ──────────────────────────────────── */
+.editable-field, .estimate-display {
+  cursor: pointer;
+  border-bottom: 1px dashed #94a3b8;
+  padding-bottom: 1px;
+}
+.editable-field:hover, .estimate-display:hover {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+.estimate-input  { min-width: 70px; max-width: 90px; font-size: 0.8rem; padding: 2px 6px; }
+.assignee-select { font-size: 0.8rem; padding: 2px 6px; }
+
+/* ── Summary / comment truncation ─────────────────────────────────────────── */
+.summary-cell { max-width: 220px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.comment-cell { max-width: 160px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ── Select / Deselect All buttons ────────────────────────────────────────── */
+#selectAllBtn, #deselectAllBtn {
+  font-size: 0.78rem;
+  border-radius: 7px;
+  padding: 5px 12px;
+  font-weight: 500;
+}
+
+/* ── Filter buttons ────────────────────────────────────────────────────────── */
+.filter-btn {
+  font-size: 0.78rem; border: 1.5px solid #e2e8f0; color: #64748b;
+  background: white; border-radius: 7px; padding: 5px 13px; font-weight: 500;
+  transition: all 0.12s; cursor: pointer;
+}
+.filter-btn:hover  { border-color: var(--primary); color: var(--primary); }
+.filter-btn.active { border-color: var(--primary); color: white; background: var(--primary); }
+
+/* ── Schedule modal card (matches 2.png) ───────────────────────────────────── */
+.sched-modal-card {
+  border-radius: 1.25rem;
+  border: none;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.18);
+  position: relative;
+}
+.sched-close {
+  position: absolute; top: 1rem; right: 1rem; z-index: 10;
+}
+/* ── Floating schedule button ──────────────────────────────────────────────── */
+.float-sched-btn {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1050;
+  animation: floatUp 0.2s ease;
+}
+.float-sched-btn .btn {
+  border-radius: 999px;
+  padding: 0.6rem 1.5rem;
+  font-size: 0.9rem;
+}
+@keyframes floatUp {
+  from { opacity: 0; transform: translateX(-50%) translateY(12px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* ── Schedule modal success state ──────────────────────────────────────────── */
+.success-icon { font-size: 3rem; }
+
+.created-tickets-list {
+  max-height: 200px;
+  overflow-y: auto;
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 0.75rem;
+  border: 1px solid #e2e8f0;
+}
+.created-ticket-row {
+  display: flex;
+  align-items: center;
+  padding: 4px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+.created-ticket-row:last-child { border-bottom: none; }
+.created-ticket-row a { font-size: 0.78rem; word-break: break-all; color: #6366f1; }
+.created-ticket-row a:hover { text-decoration: underline; }
+
+/* ── Schedule modal success state ──────────────────────────────────────────── */
+.sched-label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  margin-bottom: 5px;
+  padding-left: 2px;
+}
+
+.sched-input-group {
+  border-radius: 10px; overflow: hidden;
+  border: 1.5px solid #e2e8f0; background: #f8fafc;
+}
+.sched-input-group:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+}
+.sched-icon { background: #f8fafc; border: none; color: #94a3b8; padding: 0 12px; }
+.sched-input { border: none; background: #f8fafc; padding: 11px 12px; font-size: 0.875rem; }
+.sched-input:focus { box-shadow: none; background: #f8fafc; }
+.sched-eye-btn { border: none; background: #f8fafc; color: #94a3b8; padding: 0 12px; }
+.sched-eye-btn:hover { color: var(--primary); background: #f8fafc; }
+.sched-submit-btn {
+  border-radius: 10px; padding: 12px;
+  font-weight: 700; letter-spacing: 0.05em; font-size: 0.9rem;
+}
+
+/* ── Remove any focus outline on table rows / checkboxes ───────────────────── */
+#ticketsTable tbody tr:focus,
+#ticketsTable tbody td:focus { outline: none !important; box-shadow: none !important; }
+.row-check:focus { outline: none !important; box-shadow: none !important; }
+
+/* ── DataTables override ───────────────────────────────────────────────────── */
+.dataTables_wrapper { padding: 0.75rem 1rem 1rem; }
+.dataTables_wrapper .dataTables_filter { margin-bottom: 0.5rem; }
+.dataTables_wrapper .dataTables_filter input {
+  border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 10px; margin-left: 6px;
+}
+.dataTables_wrapper .dataTables_length select {
+  border: 1px solid #e2e8f0; border-radius: 6px; margin: 0 4px;
+}
+div.dataTables_wrapper div.dataTables_paginate ul.pagination { margin: 0; }
+
+/* Keep top controls (length + filter) in one clean row */
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter { margin-top: 0; }
+
+/* ── Scrollbar ─────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
