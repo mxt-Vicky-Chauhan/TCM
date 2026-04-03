@@ -5,7 +5,7 @@ const XLSX    = require('xlsx');
 const fs      = require('fs');
 
 const app  = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const EXCEL_PATH = path.join(__dirname, 'TCM.xlsx');
 const NON_TEAM_SHEETS = new Set(['Instructions', 'Summary', 'BaseData', 'Template']);
 
@@ -184,4 +184,9 @@ function parseEstimate(est) {
   return Math.round(secs) || undefined;
 }
 
-app.listen(PORT, () => console.log(`Regression Manager → http://localhost:${PORT}`));
+// Start server locally; on Vercel the exported app is used instead
+if (require.main === module) {
+  app.listen(PORT, () => console.log(`Regression Manager → http://localhost:${PORT}`));
+}
+
+module.exports = app;
