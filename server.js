@@ -14,9 +14,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // ─── Excel helpers ────────────────────────────────────────────────────────────
 
+let _wbCache = null;
+let _wbMtime = null;
+
 function loadWorkbook() {
   if (!fs.existsSync(EXCEL_PATH)) throw new Error('TCM.xlsx not found');
-  return XLSX.readFile(EXCEL_PATH);
+  const mtime = fs.statSync(EXCEL_PATH).mtimeMs;
+  if (!_wbCache || mtime !== _wbMtime) {
+    _wbCache = XLSX.readFile(EXCEL_PATH);
+    _wbMtime = mtime;
+    console.log('TCM.xlsx loaded into cache');
+  }
+  return _wbCache;
 }
 
 function parseTeamSheet(ws) {
