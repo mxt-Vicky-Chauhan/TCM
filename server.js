@@ -7,7 +7,7 @@ const fs      = require('fs');
 const app  = express();
 const PORT = process.env.PORT || 3000;
 const EXCEL_PATH = path.join(__dirname, 'TCM.xlsx');
-const NON_TEAM_SHEETS = new Set(['Instructions', 'Summary', 'BaseData', 'Template']);
+const NON_TEAM_SHEETS = new Set(['Instructions', 'Summary', 'BaseData']);
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -88,15 +88,21 @@ app.get('/api/teams', (req, res) => {
     const teams = wb.SheetNames
       .filter(n => !NON_TEAM_SHEETS.has(n))
       .map(name => {
-        const d = parseTeamSheet(wb.Sheets[name]);
-        return {
-          name,
-          total:     d.stats.total,
-          scheduled: d.stats.scheduled,
-          pending:   d.stats.total - d.stats.scheduled,
-          release:   d.release
-        };
-      });
+        try {
+          const d = parseTeamSheet(wb.Sheets[name]);
+          return {
+            name,
+            total:     d.stats.total,
+            scheduled: d.stats.scheduled,
+            pending:   d.stats.total - d.stats.scheduled,
+            release:   d.release
+          };
+        } catch (e) {
+          console.warn(`Skipping sheet "${name}":`, e.message);
+          return null;
+        }
+      })
+      .filter(Boolean);
     res.json(teams);
   } catch (err) {
     res.status(500).json({ error: err.message });
